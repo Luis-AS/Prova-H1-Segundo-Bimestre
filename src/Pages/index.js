@@ -1,67 +1,36 @@
-import React, { } from 'react';
-import { } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-import api from '../Services/Api';
+import './styles.css'
 
-export default function () {
-    const [userId, setUserId] = ('');
-    const [Id, setId] = ('');
-    const [title, setTitle] = ('');
-    const [body, setBody] = ('');
+import api from '../../services/api';
 
-    async function handleRegister(e) {
-        e.preventDefault();
+export default function Home() {
+    const [ posts, setPosts ] = useState([]);
 
-        const data = {
-            userId,
-            Id,
-            title,
-            body,
-        };
+    useEffect(() => {
+        api.get('posts').then(response => {
+            console.log(response.data);
+            setPosts(response.data);
+        })
+    }, [])
 
-        try {
-          const response = await api.post(data);
-            alert('Funciona')
-        } catch (err) {
-            alert('Nao funciona')
-        }
-
-    }
+   
 
     return (
-        <div className="container">
-            <div className="content">
-                <section>
-                    {}
+        <div className="home-container">
+            <ul>
+                {posts.map(post => (
+                    <li key={post.id}>
+                        <strong>Title</strong>
+                        <p>{post.title}</p>
+                        <strong>Body</strong>
+                        <p>{post.body}</p>
 
-                    <h1>Post</h1>
-
-                </section>
-
-                <form onSubmit={handleRegister}>
-                    <input
-                        placeholder="userId"
-                        value={Id}
-                        onChange={e => setUserId(e.target.value)}
-                    />
-                    <input
-                        placeholder="ID"
-                        value={Id}
-                        onChange={e => setId(e.target.value)}
-                    />
-                    <input
-                        placeholder="title"
-                        value={title}
-                        onChange={e => setTitle(e.target.value)}
-                    />
-                    <input
-                        placeholder="body"
-                        value={Text}
-                        onChange={e => setBody(e.target.value)}
-                    />
-
-                </form>
-            </div>
+                    </li>
+                ))}
+            </ul>
         </div>
     )
+
 }
